@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative h-[90vh] min-h-[600px] w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+    <section className="relative h-[70vh] min-h-[500px] w-full bg-gray-50 flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -27,7 +27,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="font-display font-black text-6xl md:text-8xl text-gray-900 tracking-tighter mb-6 leading-[0.9]">
+            <h1 className="font-display font-black text-7xl md:text-9xl text-gray-900 tracking-tighter mb-6 leading-[0.9]">
               STEP INTO <br />
               <span className="text-brand-green">STYLED.</span>
             </h1>

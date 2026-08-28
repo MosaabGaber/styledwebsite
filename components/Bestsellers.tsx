@@ -5,7 +5,7 @@ export default function Bestsellers() {
   const bestsellers = products.filter(p => p.isBestseller);
 
   return (
-    <section id="bestsellers" className="py-24 bg-white">
+    <section id="bestsellers" className="pt-8 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-end mb-12">
           <div>
