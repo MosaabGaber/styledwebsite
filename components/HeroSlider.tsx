@@ -69,23 +69,12 @@ export default function HeroSlider() {
 
       ScrollTrigger.create({
         trigger: containerRef.current,
-        start: "top top",
-        end: `+=${slides.length * 20}vh`,
-        pin: true,
+        start: "top bottom",
+        end: "bottom top",
         onEnter: () => { isHeroInView.current = true; resetAutoplay(); },
         onLeave: () => { isHeroInView.current = false; killAutoplay(); },
         onEnterBack: () => { isHeroInView.current = true; resetAutoplay(); },
         onLeaveBack: () => { isHeroInView.current = false; killAutoplay(); },
-        onUpdate: (self) => {
-          const progress = self.progress;
-          let targetIndex = Math.floor(progress * slides.length);
-          if (targetIndex >= slides.length) targetIndex = slides.length - 1;
-
-          if (targetIndex !== activeIndexRef.current && !isAnimatingRef.current) {
-            goToSlide(targetIndex, targetIndex > activeIndexRef.current ? 1 : -1);
-            resetAutoplay();
-          }
-        },
       });
     },
     { scope: containerRef }
@@ -102,13 +91,8 @@ export default function HeroSlider() {
         let nextIndex = activeIndexRef.current + 1;
         if (nextIndex >= slides.length) nextIndex = 0;
 
-        // Autoplay by scrolling the page down so it stays in sync with ScrollTrigger
-        const st = ScrollTrigger.getAll().find((t) => t.vars.trigger === containerRef.current);
-        if (st) {
-          const targetProgress = nextIndex / slides.length;
-          const scrollPos = st.start + (st.end - st.start) * targetProgress + 50;
-          window.scrollTo({ top: scrollPos, behavior: "smooth" });
-        }
+        goToSlide(nextIndex, 1);
+        resetAutoplay();
       });
     }
   });
@@ -278,18 +262,8 @@ export default function HeroSlider() {
 
   const handleDotClick = (index: number) => {
     if (index === activeIndexRef.current || isAnimatingRef.current) return;
-
     resetAutoplay();
-
-    const st = ScrollTrigger.getAll().find((t) => t.vars.trigger === containerRef.current);
-    if (st) {
-      const progress = index / slides.length;
-      // Scroll to the exact position that maps to this slide
-      const scrollPos = st.start + (st.end - st.start) * progress + 50;
-      window.scrollTo({ top: scrollPos, behavior: "smooth" });
-    } else {
-      goToSlide(index, index > activeIndexRef.current ? 1 : -1);
-    }
+    goToSlide(index, index > activeIndexRef.current ? 1 : -1);
   };
 
   return (
@@ -315,7 +289,7 @@ export default function HeroSlider() {
 
             {/* Text Layer (CSS Centered Wrapper) */}
             <div className="absolute inset-0 flex items-start justify-center pt-8 md:pt-12 pointer-events-none">
-              <div className="slide-text relative w-[150%] md:w-[100%] max-w-[1400px] aspect-[16/10] md:aspect-[21/9]">
+              <div className="slide-text relative w-[180%] md:w-[115%] max-w-[1600px] aspect-[16/10] md:aspect-[21/9]">
                 <Image
                   src={slide.text}
                   alt={slide.name}
