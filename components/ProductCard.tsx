@@ -14,7 +14,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={product.images[0]}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className={`object-cover transition-transform duration-700 group-hover:scale-105 ${product.soldOut ? 'opacity-40 grayscale' : ''}`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
         {/* Secondary image on hover (optional enhancement) */}
@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[1]}
             alt={`${product.name} alternate view`}
             fill
-            className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100 absolute inset-0"
+            className={`object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100 absolute inset-0 ${product.soldOut ? 'opacity-40 grayscale' : ''}`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         )}
@@ -32,6 +32,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.isNewArrival && (
             <span className="bg-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider text-gray-900 shadow-sm">
               New
+            </span>
+          )}
+          {product.soldOut && (
+            <span className="bg-black text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              Sold Out
             </span>
           )}
         </div>

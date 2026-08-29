@@ -102,10 +102,11 @@ export default function ProductPage() {
                 {product.colors.map((color) => (
                   <button
                     key={color.name}
+                    disabled={product.soldOut}
                     onClick={() => setSelectedColor(color)}
                     className={`relative w-12 h-12 rounded-full border-2 transition-all flex items-center justify-center ${
                       selectedColor?.name === color.name ? 'border-brand-green scale-110' : 'border-gray-200'
-                    }`}
+                    } ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                     style={{ backgroundColor: color.hex }}
                     aria-label={`Select ${color.name}`}
                   >
@@ -127,12 +128,13 @@ export default function ProductPage() {
                 {product.sizes.map((size) => (
                   <button
                     key={size}
+                    disabled={product.soldOut}
                     onClick={() => setSelectedSize(size)}
                     className={`py-3 rounded-xl border font-medium transition-all ${
                       selectedSize === size 
                         ? 'bg-brand-green border-brand-green text-white' 
                         : 'bg-white border-gray-200 text-gray-900 hover:border-gray-400'
-                    }`}
+                    } ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {size}
                   </button>
@@ -140,12 +142,21 @@ export default function ProductPage() {
               </div>
             </div>
 
-            <button 
-              onClick={handleBuyNow}
-              className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-full font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg mb-6"
-            >
-              Buy Now
-            </button>
+            {product.soldOut ? (
+              <button 
+                disabled
+                className="w-full bg-gray-200 text-gray-400 py-5 rounded-full font-bold text-lg cursor-not-allowed mb-6"
+              >
+                Sold Out
+              </button>
+            ) : (
+              <button 
+                onClick={handleBuyNow}
+                className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-full font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg mb-6"
+              >
+                Buy Now
+              </button>
+            )}
             
             {/* Features */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-100">
