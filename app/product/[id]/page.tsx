@@ -1,12 +1,12 @@
 "use client";
 
 import { products } from "@/lib/products";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, ShieldCheck, Truck } from "lucide-react";
+import ProductGallery from "@/components/ProductGallery";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -15,7 +15,6 @@ export default function ProductPage() {
 
   const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [activeImage, setActiveImage] = useState(0);
 
   if (!product) {
     notFound();
@@ -51,31 +50,9 @@ export default function ProductPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="lg:w-1/2 flex flex-col-reverse sm:flex-row gap-4"
+            className="lg:w-1/2"
           >
-            {/* Thumbnails */}
-            <div className="flex sm:flex-col gap-4 overflow-x-auto sm:overflow-y-auto sm:w-24 flex-shrink-0 hide-scrollbar">
-              {product.images.map((img, idx) => (
-                <button 
-                  key={idx} 
-                  onClick={() => setActiveImage(idx)}
-                  className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activeImage === idx ? 'border-brand-green' : 'border-transparent hover:border-gray-200'}`}
-                >
-                  <Image src={img} alt="" fill className="object-cover" />
-                </button>
-              ))}
-            </div>
-            
-            {/* Main Image */}
-            <div className="relative aspect-[4/5] sm:aspect-auto sm:flex-1 bg-gray-50 rounded-2xl overflow-hidden">
-              <Image 
-                src={product.images[activeImage]} 
-                alt={product.name} 
-                fill 
-                className="object-cover"
-                priority
-              />
-            </div>
+            <ProductGallery images={product.images} name={product.name} />
           </motion.div>
 
           {/* Product Info */}
