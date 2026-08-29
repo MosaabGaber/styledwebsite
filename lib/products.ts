@@ -70,10 +70,6 @@ export const products: Product[] = [
     images: [
       "/new1.png",
       "/new2.png",
-      "/new3.png",
-      "/new4.png",
-      "/new5.png",
-      "/new6.png",
     ],
     colors: [
       { name: "White/Silver", hex: "#E5E7EB" }
