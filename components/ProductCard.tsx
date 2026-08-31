@@ -9,24 +9,26 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.id}`} className="group block">
-      <div className={`relative aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4 ${product.soldOut ? 'opacity-60 grayscale' : ''}`}>
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        />
-        {/* Secondary image on hover (optional enhancement) */}
-        {product.images[1] && (
+      <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4">
+        <div className={`relative w-full h-full ${product.soldOut ? 'opacity-60 grayscale' : ''}`}>
           <Image
-            src={product.images[1]}
-            alt={`${product.name} alternate view`}
+            src={product.images[0]}
+            alt={product.name}
             fill
-            className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100 absolute inset-0"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
-        )}
+          {/* Secondary image on hover (optional enhancement) */}
+          {product.images[1] && (
+            <Image
+              src={product.images[1]}
+              alt={`${product.name} alternate view`}
+              fill
+              className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100 absolute inset-0"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            />
+          )}
+        </div>
         
         <div className="absolute top-4 left-4 flex flex-col gap-2">
           {product.isNewArrival && (
