@@ -27,6 +27,7 @@ function CheckoutForm() {
     name: "",
     phone: "",
     address: "",
+    city: "",
     instapayRef: "",
   });
 
@@ -39,19 +40,46 @@ function CheckoutForm() {
     );
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API checkout
-    setTimeout(() => {
+    try {
+      const orderTotal = product.price >= 150 ? product.price : product.price + 10;
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          productName: product.name,
+          size: size,
+          color: colorName,
+          price: orderTotal,
+          paymentMethod: paymentMethod,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setIsSuccess(true);
+      } else {
+        alert(data.message || "Failed to place order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Checkout submission error:", error);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
+    }
   };
 
   if (isSuccess) {
@@ -99,6 +127,22 @@ function CheckoutForm() {
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                   <input required type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all" />
+                </div>
+                <div>
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                  <select
+                    required
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all bg-white"
+                  >
+                    <option value="">Select a city</option>
+                    <option value="Cairo">Cairo</option>
+                    <option value="Giza">Giza</option>
+                    <option value="Alexandria">Alexandria</option>
+                  </select>
                 </div>
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
