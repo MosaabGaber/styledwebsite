@@ -63,7 +63,7 @@ export default function ProductPage() {
             className="lg:w-1/2 flex flex-col justify-center"
           >
             <h1 className="font-display font-black text-4xl text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-2xl font-medium text-gray-900 mb-6">${product.price}</p>
+            <p className="text-2xl font-medium text-gray-900 mb-6">{product.price.toLocaleString()} EGP</p>
             
             <p className="text-gray-600 mb-8 leading-relaxed">
               {product.description}
@@ -141,7 +141,7 @@ export default function ProductPage() {
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-brand-green">
                   <Truck className="w-5 h-5" />
                 </div>
-                <span>Free shipping over $150</span>
+                <span>Free shipping over 150 EGP</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-brand-green">

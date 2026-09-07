@@ -25,6 +25,7 @@ function CheckoutForm() {
   // Form State
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     address: "",
     city: "",
@@ -57,6 +58,7 @@ function CheckoutForm() {
         },
         body: JSON.stringify({
           name: formData.name,
+          email: formData.email,
           phone: formData.phone,
           address: formData.address,
           city: formData.city,
@@ -123,6 +125,10 @@ function CheckoutForm() {
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                   <input required type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all" />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                  <input required type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all" />
                 </div>
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
@@ -217,25 +223,25 @@ function CheckoutForm() {
               <div className="flex-1 flex flex-col justify-center">
                 <h4 className="font-bold text-gray-900">{product.name}</h4>
                 <p className="text-sm text-gray-500 mb-1">Color: {colorName} | Size: {size}</p>
-                <p className="font-medium text-gray-900">${product.price}</p>
+                <p className="font-medium text-gray-900">{product.price.toLocaleString()} EGP</p>
               </div>
             </div>
 
             <div className="space-y-3 text-sm mb-6">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span>${product.price}</span>
+                <span>{product.price.toLocaleString()} EGP</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
-                <span>{product.price >= 150 ? "Free" : "$10"}</span>
+                <span>{product.price >= 150 ? "Free" : "10 EGP"}</span>
               </div>
             </div>
 
             <div className="flex justify-between items-center border-t border-gray-200 pt-6 mb-8">
               <span className="font-bold text-lg text-gray-900">Total</span>
               <span className="font-bold text-2xl text-gray-900">
-                ${product.price >= 150 ? product.price : product.price + 10}
+                {(product.price >= 150 ? product.price : product.price + 10).toLocaleString()} EGP
               </span>
             </div>
 

@@ -10,7 +10,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.id}`} className="group block">
       <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4">
-        <div className={`relative w-full h-full ${product.soldOut ? 'opacity-60 grayscale' : ''}`}>
+        <div className="relative w-full h-full">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 className="font-bold text-gray-900 text-lg mb-1">{product.name}</h3>
           <p className="text-gray-500 text-sm">{product.colors.length} Colors</p>
         </div>
-        <p className="font-medium text-gray-900">${product.price}</p>
+        <p className="font-medium text-gray-900">{product.price.toLocaleString()} EGP</p>
       </div>
     </Link>
   );

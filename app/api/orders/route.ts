@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     const {
       name,
+      email,
       phone,
       address,
       city,
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     // Basic validation
-    if (!name || !phone || !address || !city || !productName || !size || !color || !price || !paymentMethod) {
+    if (!name || !email || !phone || !address || !city || !productName || !size || !color || !price || !paymentMethod) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
@@ -107,6 +108,7 @@ export async function POST(request: NextRequest) {
       const { error } = await supabase.from("orders").insert([
         {
           customer_name: name,
+          customer_email: email,
           phone,
           address,
           city,
@@ -171,7 +173,7 @@ export async function POST(request: NextRequest) {
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Price:</td>
-                <td style="padding: 6px 0; font-weight: bold; color: #111827;">$${price}</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${Number(price).toLocaleString()} EGP</td>
               </tr>
             </table>
 
@@ -207,6 +209,86 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.warn("Resend API Key or Notification Email is missing in environment variables.");
+    }
+
+    // 4. Send customer order confirmation email (isolated in its own try/catch)
+    if (process.env.RESEND_API_KEY && email) {
+      try {
+        let paymentNote = "";
+        if (paymentMethod === "COD") {
+          paymentNote = "<p>Your order will be shipped soon, and you will pay Cash on Delivery upon receiving your package.</p>";
+        } else if (paymentMethod === "INSTAPAY") {
+          paymentNote = `
+            <p style="background-color: #fffbeb; border: 1px solid #fef3c7; padding: 12px; border-radius: 6px; color: #b45309;">
+              <strong>Important Payment Step:</strong> Please complete your InstaPay transfer of <strong>${Number(price).toLocaleString()} EGP</strong> to our handle <strong>styled_store@instapay</strong> to confirm and process your order.
+            </p>
+          `;
+        }
+
+        let trackingNote = "";
+        if (bostaTrackingNumber) {
+          trackingNote = `
+            <p>Your order has been registered with Bosta for shipping. Your tracking number is <strong style="color: #059669;">${bostaTrackingNumber}</strong>. You will receive updates on your delivery status.</p>
+          `;
+        }
+
+        const customerHtmlContent = `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h2 style="color: #111827; margin-top: 0;">Thank you for your order with Styled!</h2>
+            <p>Hi ${name},</p>
+            <p>We've received your order and are getting it ready. Here is a summary of your order details:</p>
+            
+            <h3 style="color: #374151; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">Order Summary</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280; width: 140px;">Product:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${productName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Color / Size:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${size}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Total Price:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${Number(price).toLocaleString()} EGP</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Payment Method:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${paymentMethod === "COD" ? "Cash on Delivery" : "InstaPay"}</td>
+              </tr>
+            </table>
+
+            <h3 style="color: #374151; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">Delivery Details</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280; width: 140px;">City:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${city}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Address:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${address}</td>
+              </tr>
+            </table>
+
+            ${paymentNote}
+            ${trackingNote}
+
+            <p style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; font-size: 14px; color: #6b7280;">
+              If you have any questions, feel free to reply directly to this email.
+            </p>
+          </div>
+        `;
+
+        await resend.emails.send({
+          from: "orders@styledeg.com",
+          to: email,
+          subject: `Order Confirmation - Thank you for your order!`,
+          html: customerHtmlContent,
+        });
+        console.log("Successfully sent customer confirmation email.");
+      } catch (customerEmailErr) {
+        console.error("Failed to send customer confirmation email:", customerEmailErr);
+      }
     }
 
     return NextResponse.json({
