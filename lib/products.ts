@@ -98,6 +98,91 @@ export const products: Product[] = [
     isBestseller: true,
   },
   {
+    id: "campus-00s-core-black",
+    name: "Campus 00s Core Black",
+    description: "Add product description here.",
+    price: 2300,
+    images: [
+      "/campb1.png",
+      "/campb2.png",
+      "/campb3.png",
+    ],
+    colors: [
+      { name: "Black", hex: "#000000" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    isBestseller: true,
+    soldOut: true,
+  },
+  {
+    id: "campus-00s-dark-green",
+    name: "Campus 00s Dark Green",
+    description: "Add product description here.",
+    price: 2300,
+    images: [
+      "/campg1.png",
+      "/campg2.png",
+      "/campg3.png",
+    ],
+    colors: [
+      { name: "Dark Green", hex: "#1B3B2F" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    isBestseller: true,
+    soldOut: false,
+  },
+  {
+    id: "arizona-birkenstock-taupe",
+    name: "Arizona Birkenstock Taupe",
+    description: "Add product description here.",
+    price: 2500,
+    images: [
+      "/ariz1.png",
+      "/ariz2.png",
+      "/ariz3.png",
+    ],
+    colors: [
+      { name: "Taupe", hex: "#C2B4A4" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    isBestseller: true,
+    soldOut: true,
+  },
+  {
+    id: "uggs-tazz-ii-chestnut",
+    name: "UGGs Tazz II Chestnut",
+    description: "Add product description here.",
+    price: 4000,
+    images: [
+      "/tazz1.png",
+      "/tazz2.png",
+      "/tazz3.png",
+    ],
+    colors: [
+      { name: "Chestnut", hex: "#954535" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    isBestseller: true,
+    soldOut: true,
+  },
+  {
+    id: "uggs-tazz-ii-portobello-pink",
+    name: "UGGs Tazz II Portobello Pink",
+    description: "Add product description here.",
+    price: 4000,
+    images: [
+      "/tazzp1.png",
+      "/tazzp2.png",
+      "/tazzp3.png",
+    ],
+    colors: [
+      { name: "Portobello Pink", hex: "#D8A7A0" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    isBestseller: true,
+    soldOut: true,
+  },
+  {
     id: "sneaker-01",
     name: "Styled Classic",
     description: "The classic silhouette that started it all. Premium leather upper, minimal branding, and a durable rubber outsole for everyday comfort.",
