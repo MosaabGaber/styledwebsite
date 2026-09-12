@@ -20,9 +20,9 @@ export default function Navbar() {
           
           <div className="hidden md:flex space-x-8">
             <Link href="/" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Home</Link>
-            <Link href="#" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Men</Link>
-            <Link href="#" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Women</Link>
-            <Link href="#" className="text-gray-600 hover:text-brand-green font-medium transition-colors">New Arrivals</Link>
+            <Link href="/?gender=men#bestsellers" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Men</Link>
+            <Link href="/?gender=women#bestsellers" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Women</Link>
+            <Link href="/#new-arrivals" className="text-gray-600 hover:text-brand-green font-medium transition-colors">New Arrivals</Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-6">
@@ -52,10 +52,10 @@ export default function Navbar() {
             className="md:hidden bg-white border-b border-gray-100"
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
-              <Link href="/" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md">Home</Link>
-              <Link href="#" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md">Men</Link>
-              <Link href="#" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md">Women</Link>
-              <Link href="#" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md">New Arrivals</Link>
+              <Link href="/" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Home</Link>
+              <Link href="/?gender=men#bestsellers" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Men</Link>
+              <Link href="/?gender=women#bestsellers" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Women</Link>
+              <Link href="/#new-arrivals" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>New Arrivals</Link>
               <Link href="/checkout" className="block px-3 py-2 text-base font-medium text-brand-green flex items-center space-x-2">
                 <ShoppingBag className="w-5 h-5" />
                 <span>Cart / Checkout</span>

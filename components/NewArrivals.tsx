@@ -2,11 +2,22 @@
 
 import { products } from "@/lib/products";
 import ProductCard from "./ProductCard";
-import { useRef } from "react";
+import { useRef, Suspense } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
-export default function NewArrivals() {
-  const newArrivals = products.filter(p => p.isNewArrival);
+function NewArrivalsContent() {
+  const searchParams = useSearchParams();
+  const genderParam = searchParams.get("gender");
+
+  const activeGender = genderParam === "men" || genderParam === "women" ? genderParam : "all";
+
+  const newArrivals = products.filter((p) => {
+    if (!p.isNewArrival) return false;
+    if (activeGender === "all") return true;
+    return p.gender === activeGender;
+  });
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -20,7 +31,7 @@ export default function NewArrivals() {
   if (newArrivals.length === 0) return null;
 
   return (
-    <section className="py-24 bg-gray-50 overflow-hidden">
+    <section id="new-arrivals" className="py-24 bg-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-end mb-12">
           <div>
@@ -29,15 +40,15 @@ export default function NewArrivals() {
             </h2>
             <p className="text-gray-500 mt-2">Fresh styles just landed.</p>
           </div>
-          
+
           <div className="hidden sm:flex gap-2">
-            <button 
+            <button
               onClick={() => scroll("left")}
               className="p-3 rounded-full bg-white border border-gray-200 text-gray-900 hover:border-gray-900 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button 
+            <button
               onClick={() => scroll("right")}
               className="p-3 rounded-full bg-white border border-gray-200 text-gray-900 hover:border-gray-900 transition-colors"
             >
@@ -45,12 +56,12 @@ export default function NewArrivals() {
             </button>
           </div>
         </div>
-        
+
         {/* Horizontal scrollable container */}
-        <div 
+        <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory scrollbar-hide"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {newArrivals.map((product) => (
             <div key={product.id} className="min-w-[85vw] sm:min-w-[400px] lg:min-w-[350px] snap-start flex-shrink-0">
@@ -60,5 +71,13 @@ export default function NewArrivals() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function NewArrivals() {
+  return (
+    <Suspense fallback={null}>
+      <NewArrivalsContent />
+    </Suspense>
   );
 }

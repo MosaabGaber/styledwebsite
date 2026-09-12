@@ -6,6 +6,7 @@ export interface Product {
   images: string[];
   colors: { name: string; hex: string }[];
   sizes: number[];
+  gender: "men" | "women";
   isNewArrival?: boolean;
   isBestseller?: boolean;
   soldOut?: boolean;
@@ -25,6 +26,7 @@ export const products: Product[] = [
       { name: "Silver/White", hex: "#E5E7EB" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
     isBestseller: true,
     soldOut: true,
   },
@@ -42,6 +44,7 @@ export const products: Product[] = [
       { name: "Red", hex: "#EF4444" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "women",
     isNewArrival: true,
     isBestseller: true,
     soldOut: false,
@@ -60,6 +63,7 @@ export const products: Product[] = [
       { name: "Black", hex: "#000000" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "women",
     isNewArrival: true,
     isBestseller: true,
     soldOut: false,
@@ -77,6 +81,7 @@ export const products: Product[] = [
       { name: "White/Silver", hex: "#E5E7EB" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
     isBestseller: true,
     soldOut: true,
   },
@@ -97,6 +102,7 @@ export const products: Product[] = [
       { name: "Taupe", hex: "#C2B4A4" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
     isBestseller: true,
   },
   {
@@ -113,6 +119,7 @@ export const products: Product[] = [
       { name: "Black", hex: "#000000" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
     isBestseller: true,
     soldOut: true,
   },
@@ -130,6 +137,7 @@ export const products: Product[] = [
       { name: "Dark Green", hex: "#1B3B2F" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
     isBestseller: true,
     soldOut: false,
   },
@@ -147,6 +155,7 @@ export const products: Product[] = [
       { name: "Taupe", hex: "#C2B4A4" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "women",
     isBestseller: true,
     soldOut: true,
   },
@@ -164,6 +173,7 @@ export const products: Product[] = [
       { name: "Chestnut", hex: "#954535" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "women",
     isBestseller: true,
     soldOut: true,
   },
@@ -181,6 +191,7 @@ export const products: Product[] = [
       { name: "Portobello Pink", hex: "#D8A7A0" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "women",
     isBestseller: true,
     soldOut: true,
   }
