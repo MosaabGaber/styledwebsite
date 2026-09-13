@@ -4,9 +4,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { products } from "@/lib/products";
 import Image from "next/image";
-import { CheckCircle2, ChevronLeft, CreditCard, Wallet } from "lucide-react";
+import { CheckCircle2, ChevronLeft, CreditCard, RefreshCw, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import ReturnsModal from "@/components/ReturnsModal";
 
 function CheckoutForm() {
   const searchParams = useSearchParams();
@@ -21,6 +22,7 @@ function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState<"COD" | "INSTAPAY">("COD");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isReturnsModalOpen, setIsReturnsModalOpen] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -249,7 +251,7 @@ function CheckoutForm() {
               type="submit"
               form="checkout-form"
               disabled={isSubmitting}
-              className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-xl font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg disabled:opacity-70 flex justify-center items-center"
+              className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-xl font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg disabled:opacity-70 flex justify-center items-center mb-4"
             >
               {isSubmitting ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -257,9 +259,23 @@ function CheckoutForm() {
                 "Confirm Order"
               )}
             </button>
+
+            <button
+              type="button"
+              onClick={() => setIsReturnsModalOpen(true)}
+              className="w-full text-center text-sm font-semibold text-gray-500 hover:text-brand-green transition-colors flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-4 h-4 text-brand-green" />
+              <span>Returns & Exchange Policy</span>
+            </button>
           </div>
         </div>
       </div>
+
+      <ReturnsModal
+        isOpen={isReturnsModalOpen}
+        onClose={() => setIsReturnsModalOpen(false)}
+      />
     </div>
   );
 }

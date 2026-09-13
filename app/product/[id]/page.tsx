@@ -5,8 +5,9 @@ import Link from "next/link";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, Check, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
+import ReturnsModal from "@/components/ReturnsModal";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function ProductPage() {
 
   const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
+  const [isReturnsModalOpen, setIsReturnsModalOpen] = useState(false);
 
   if (!product) {
     notFound();
@@ -122,18 +124,27 @@ export default function ProductPage() {
             {product.soldOut ? (
               <button 
                 disabled
-                className="w-full bg-gray-200 text-gray-400 py-5 rounded-full font-bold text-lg cursor-not-allowed mb-6"
+                className="w-full bg-gray-200 text-gray-400 py-5 rounded-full font-bold text-lg cursor-not-allowed mb-4"
               >
                 Sold Out
               </button>
             ) : (
               <button 
                 onClick={handleBuyNow}
-                className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-full font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg mb-6"
+                className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-full font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg mb-4"
               >
                 Buy Now
               </button>
             )}
+
+            <button
+              type="button"
+              onClick={() => setIsReturnsModalOpen(true)}
+              className="w-full text-center text-sm font-semibold text-gray-500 hover:text-brand-green transition-colors mb-6 flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-4 h-4 text-brand-green" />
+              <span>Returns & Exchange Policy</span>
+            </button>
             
             {/* Features */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-100">
@@ -154,6 +165,11 @@ export default function ProductPage() {
           </motion.div>
         </div>
       </div>
+
+      <ReturnsModal
+        isOpen={isReturnsModalOpen}
+        onClose={() => setIsReturnsModalOpen(false)}
+      />
     </div>
   );
 }

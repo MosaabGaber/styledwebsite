@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export default function BrandStory() {
   return (
@@ -18,12 +17,6 @@ export default function BrandStory() {
                 From the bustling city streets to the quiet studio, our footwear adapts to your environment. We're committed to sustainable practices and timeless design, creating shoes that you'll wear season after season.
               </p>
             </div>
-            <Link 
-              href="#" 
-              className="inline-block mt-10 border-b-2 border-gray-900 pb-1 font-bold text-gray-900 hover:text-brand-green hover:border-brand-green transition-colors"
-            >
-              Read Our Full Story
-            </Link>
           </div>
           
           <div className="lg:w-1/2 w-full relative">
