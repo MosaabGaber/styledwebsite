@@ -3,11 +3,12 @@
 import { products } from "@/lib/products";
 import Link from "next/link";
 import { notFound, useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
 import ReturnsModal from "@/components/ReturnsModal";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -17,14 +18,62 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [isReturnsModalOpen, setIsReturnsModalOpen] = useState(false);
+  const [stockMap, setStockMap] = useState<Record<number, number>>({});
+
+  const productId = product?.id;
+
+  useEffect(() => {
+    if (!productId) return;
+    async function fetchStock() {
+      try {
+        const { data, error } = await supabase
+          .from("inventory")
+          .select("size, stock")
+          .eq("product_id", productId);
+
+        if (error) {
+          console.error("Error fetching inventory stock:", error);
+          return;
+        }
+
+        if (data) {
+          const map: Record<number, number> = {};
+          data.forEach((row: { size: number; stock: number }) => {
+            map[row.size] = row.stock;
+          });
+          setStockMap(map);
+        }
+      } catch (err) {
+        console.error("Failed to fetch inventory stock:", err);
+      }
+    }
+
+    fetchStock();
+  }, [product?.id]);
+
+  useEffect(() => {
+    if (selectedSize !== null && stockMap[selectedSize] !== undefined && stockMap[selectedSize] <= 0) {
+      setSelectedSize(null);
+    }
+  }, [stockMap, selectedSize]);
 
   if (!product) {
     notFound();
   }
 
+  const isSelectedSizeOutOfStock =
+    selectedSize !== null &&
+    stockMap[selectedSize] !== undefined &&
+    stockMap[selectedSize] <= 0;
+
+  const isBuyDisabled =
+    Boolean(product.soldOut) ||
+    selectedSize === null ||
+    isSelectedSizeOutOfStock;
+
   const handleBuyNow = () => {
-    if (!selectedSize) {
-      alert("Please select a size");
+    if (!selectedSize || isSelectedSizeOutOfStock || product.soldOut) {
+      alert("Please select an available size");
       return;
     }
     
@@ -104,20 +153,28 @@ export default function ProductPage() {
                 <Link href="#" className="text-sm text-brand-green hover:underline">Size Guide</Link>
               </div>
               <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    disabled={product.soldOut}
-                    onClick={() => setSelectedSize(size)}
-                    className={`py-3 rounded-xl border font-medium transition-all ${
-                      selectedSize === size 
-                        ? 'bg-brand-green border-brand-green text-white' 
-                        : 'bg-white border-gray-200 text-gray-900 hover:border-gray-400'
-                    } ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {product.sizes.map((size) => {
+                  const isSizeOutOfStock = Boolean(product.soldOut) || (stockMap[size] !== undefined && stockMap[size] <= 0);
+                  const isSelected = selectedSize === size;
+
+                  return (
+                    <button
+                      key={size}
+                      disabled={isSizeOutOfStock}
+                      onClick={() => !isSizeOutOfStock && setSelectedSize(size)}
+                      title={isSizeOutOfStock ? "Out of stock" : `Size ${size}`}
+                      className={`relative py-3 rounded-xl border font-medium transition-all ${
+                        isSizeOutOfStock
+                          ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed line-through opacity-60'
+                          : isSelected 
+                            ? 'bg-brand-green border-brand-green text-white' 
+                            : 'bg-white border-gray-200 text-gray-900 hover:border-gray-400'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -130,10 +187,15 @@ export default function ProductPage() {
               </button>
             ) : (
               <button 
+                disabled={isBuyDisabled}
                 onClick={handleBuyNow}
-                className="w-full bg-brand-green hover:bg-brand-green-hover text-white py-5 rounded-full font-bold text-lg transition-transform transform hover:scale-[1.02] shadow-lg mb-4"
+                className={`w-full py-5 rounded-full font-bold text-lg transition-transform transform mb-4 ${
+                  isBuyDisabled
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                    : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
+                }`}
               >
-                Buy Now
+                {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
               </button>
             )}
 

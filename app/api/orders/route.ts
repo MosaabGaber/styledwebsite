@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { products } from "@/lib/products";
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL || "";
@@ -19,6 +20,7 @@ export async function POST(request: NextRequest) {
       address,
       city,
       productName,
+      productId: bodyProductId,
       size,
       color,
       price,
@@ -126,6 +128,43 @@ export async function POST(request: NextRequest) {
         supabaseErrorOccurred = true;
       } else {
         console.log("Successfully inserted order into Supabase.");
+
+        // Automatically decrement stock by 1 for product/size combination after order is saved
+        const targetProductId = bodyProductId || products.find((p) => p.name === productName)?.id;
+        if (targetProductId && size) {
+          const numSize = Number(size);
+          try {
+            // Attempt atomic RPC call first
+            const { error: rpcError } = await supabase.rpc("decrement_stock", {
+              p_product_id: targetProductId,
+              p_size: numSize,
+            });
+
+            if (rpcError) {
+              // Fallback to direct query & update if RPC function does not exist
+              const { data: inventoryItem } = await supabase
+                .from("inventory")
+                .select("stock")
+                .eq("product_id", targetProductId)
+                .eq("size", numSize)
+                .maybeSingle();
+
+              if (inventoryItem) {
+                const updatedStock = Math.max(0, inventoryItem.stock - 1);
+                await supabase
+                  .from("inventory")
+                  .update({ stock: updatedStock })
+                  .eq("product_id", targetProductId)
+                  .eq("size", numSize);
+                console.log(`Decremented stock for ${targetProductId} size ${numSize} to ${updatedStock}`);
+              }
+            } else {
+              console.log(`Successfully decremented stock via RPC for ${targetProductId} size ${numSize}`);
+            }
+          } catch (stockErr) {
+            console.error("Error decrementing inventory stock:", stockErr);
+          }
+        }
       }
     } catch (supabaseErr) {
       console.error("Failed to store order in Supabase:", supabaseErr);

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "seed:inventory": "node scripts/seed-inventory.mjs",
     "lint": "eslint"
   },
   "dependencies": {

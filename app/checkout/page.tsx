@@ -65,6 +65,7 @@ function CheckoutForm() {
           address: formData.address,
           city: formData.city,
           productName: product.name,
+          productId: product.id,
           size: size,
           color: colorName,
           price: orderTotal,
