@@ -3,10 +3,14 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { products } from "@/lib/products";
 
-// Initialize Supabase client
+// Initialize Supabase client with no-cache fetch
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  global: {
+    fetch: (url, options) => fetch(url, { ...options, cache: "no-store" }),
+  },
+});
 
 // Initialize Resend client
 const resend = new Resend(process.env.RESEND_API_KEY);

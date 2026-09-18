@@ -10,6 +10,19 @@ const supabaseAnonKey =
   process.env.SUPABASE_ANON_KEY ||
   "";
 
+// Custom fetch to prevent Next.js data cache from caching Supabase REST API calls
+const noCacheFetch = (url: RequestInfo | URL, options?: RequestInit) => {
+  return fetch(url, {
+    ...options,
+    cache: "no-store",
+    headers: {
+      ...options?.headers,
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+    },
+  });
+};
+
 let cachedClient: SupabaseClient | null = null;
 
 export function getSupabaseClient(): SupabaseClient | null {
@@ -19,7 +32,11 @@ export function getSupabaseClient(): SupabaseClient | null {
     return null;
   }
   try {
-    cachedClient = createClient(supabaseUrl, supabaseAnonKey);
+    cachedClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        fetch: noCacheFetch,
+      },
+    });
     return cachedClient;
   } catch (err) {
     console.error("Failed to initialize Supabase client:", err);
@@ -27,11 +44,15 @@ export function getSupabaseClient(): SupabaseClient | null {
   }
 }
 
-// Export safe supabase instance
+// Export safe supabase instance with no-cache fetch
 export const supabase = (supabaseUrl && supabaseAnonKey)
   ? (() => {
       try {
-        return createClient(supabaseUrl, supabaseAnonKey);
+        return createClient(supabaseUrl, supabaseAnonKey, {
+          global: {
+            fetch: noCacheFetch,
+          },
+        });
       } catch (e) {
         console.error("Error creating Supabase client:", e);
         return null;

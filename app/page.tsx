@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import HeroSlider from "@/components/HeroSlider";
 import Bestsellers from "@/components/Bestsellers";
 import NewArrivals from "@/components/NewArrivals";
