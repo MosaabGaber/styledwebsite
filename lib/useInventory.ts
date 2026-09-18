@@ -13,22 +13,16 @@ export function useAllProductsStock() {
     async function fetchAllStock() {
       try {
         const client = getSupabaseClient() || supabase;
-        if (!client) {
-          console.warn("[DEBUG useAllProductsStock] Supabase client is unavailable.");
-          return;
-        }
+        if (!client) return;
 
-        console.log("[DEBUG useAllProductsStock] Initiating Supabase inventory query for all products...");
         const { data, error } = await client
           .from("inventory")
           .select("product_id, stock");
 
         if (error) {
-          console.error("[DEBUG useAllProductsStock] Supabase query returned error:", error.message || error, error);
+          console.error("Error fetching all inventory stock from Supabase:", error.message || error);
           return;
         }
-
-        console.log("[DEBUG useAllProductsStock] Raw inventory query result:", data);
 
         if (data && data.length > 0) {
           const map: Record<string, number> = {};
@@ -36,16 +30,12 @@ export function useAllProductsStock() {
             const current = map[row.product_id] ?? 0;
             map[row.product_id] = current + Math.max(0, row.stock);
           });
-          console.log("[DEBUG useAllProductsStock] Computed total stock map per product:", map);
           setStockMap(map);
-        } else {
-          console.warn("[DEBUG useAllProductsStock] Returned empty array from inventory table.");
         }
       } catch (err: any) {
         console.error(
-          "[DEBUG useAllProductsStock] Exception caught fetching inventory stock:",
-          err?.message || err,
-          err?.stack || err
+          "Exception caught fetching all inventory stock (falling back to default availability):",
+          err?.message || err
         );
       }
     }
