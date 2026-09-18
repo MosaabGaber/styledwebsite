@@ -29,31 +29,37 @@ export default function ProductPage() {
       try {
         const client = getSupabaseClient() || supabase;
         if (!client) {
-          console.warn("Supabase client unavailable. Falling back to treating all sizes as in-stock.");
+          console.warn("[DEBUG ProductPage] Supabase client unavailable. Falling back to treating all sizes as in-stock.");
           return;
         }
 
+        console.log(`[DEBUG ProductPage] Fetching inventory for product_id: ${productId}`);
         const { data, error } = await client
           .from("inventory")
           .select("size, stock")
           .eq("product_id", productId);
 
         if (error) {
-          console.error("Error response fetching inventory stock from Supabase:", error.message || error, error);
+          console.error("[DEBUG ProductPage] Error response fetching inventory stock:", error.message || error, error);
           return;
         }
+
+        console.log(`[DEBUG ProductPage] Raw inventory data for ${productId}:`, data);
 
         if (data && data.length > 0) {
           const map: Record<number, number> = {};
           data.forEach((row: { size: number; stock: number }) => {
             map[row.size] = row.stock;
           });
+          console.log(`[DEBUG ProductPage] Parsed stock map for ${productId}:`, map);
           setStockMap(map);
           setHasFetchedStock(true);
+        } else {
+          console.warn(`[DEBUG ProductPage] Returned empty inventory data array for product_id: ${productId}`);
         }
       } catch (err: any) {
         console.error(
-          "Exception caught fetching inventory stock from Supabase (falling back to default size availability):",
+          "[DEBUG ProductPage] Exception caught fetching inventory stock:",
           err?.message || err,
           err?.stack || err
         );
