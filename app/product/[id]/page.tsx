@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Check, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
 import ReturnsModal from "@/components/ReturnsModal";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabaseClient, supabase } from "@/lib/supabaseClient";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -26,13 +26,19 @@ export default function ProductPage() {
     if (!productId) return;
     async function fetchStock() {
       try {
-        const { data, error } = await supabase
+        const client = getSupabaseClient() || supabase;
+        if (!client) {
+          console.warn("Supabase client unavailable. Falling back to treating all sizes as in-stock.");
+          return;
+        }
+
+        const { data, error } = await client
           .from("inventory")
           .select("size, stock")
           .eq("product_id", productId);
 
         if (error) {
-          console.error("Error fetching inventory stock:", error);
+          console.error("Error response fetching inventory stock from Supabase:", error.message || error, error);
           return;
         }
 
@@ -43,13 +49,17 @@ export default function ProductPage() {
           });
           setStockMap(map);
         }
-      } catch (err) {
-        console.error("Failed to fetch inventory stock:", err);
+      } catch (err: any) {
+        console.error(
+          "Exception caught fetching inventory stock from Supabase (falling back to default size availability):",
+          err?.message || err,
+          err?.stack || err
+        );
       }
     }
 
     fetchStock();
-  }, [product?.id]);
+  }, [productId]);
 
   useEffect(() => {
     if (selectedSize !== null && stockMap[selectedSize] !== undefined && stockMap[selectedSize] <= 0) {
