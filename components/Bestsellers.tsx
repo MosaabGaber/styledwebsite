@@ -4,8 +4,10 @@ import { products } from "@/lib/products";
 import ProductCard from "./ProductCard";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useAllProductsStock } from "@/lib/useInventory";
 
 function BestsellersContent() {
+  const stockMap = useAllProductsStock();
   const searchParams = useSearchParams();
   const router = useRouter();
   const genderParam = searchParams.get("gender");
@@ -69,9 +71,10 @@ function BestsellersContent() {
 
         {bestsellers.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            {bestsellers.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {bestsellers.map((product) => {
+              const isSoldOut = Boolean(product.soldOut) || (stockMap[product.id] !== undefined && stockMap[product.id] <= 0);
+              return <ProductCard key={product.id} product={product} isSoldOut={isSoldOut} />;
+            })}
           </div>
         ) : (
           <div className="text-center py-12 text-gray-500">

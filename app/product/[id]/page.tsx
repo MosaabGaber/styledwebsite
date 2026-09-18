@@ -19,6 +19,7 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [isReturnsModalOpen, setIsReturnsModalOpen] = useState(false);
   const [stockMap, setStockMap] = useState<Record<number, number>>({});
+  const [hasFetchedStock, setHasFetchedStock] = useState(false);
 
   const productId = product?.id;
 
@@ -42,12 +43,13 @@ export default function ProductPage() {
           return;
         }
 
-        if (data) {
+        if (data && data.length > 0) {
           const map: Record<number, number> = {};
           data.forEach((row: { size: number; stock: number }) => {
             map[row.size] = row.stock;
           });
           setStockMap(map);
+          setHasFetchedStock(true);
         }
       } catch (err: any) {
         console.error(
@@ -71,18 +73,25 @@ export default function ProductPage() {
     notFound();
   }
 
+  const isAllSizesOutOfStock =
+    hasFetchedStock &&
+    product.sizes.length > 0 &&
+    product.sizes.every((size) => stockMap[size] !== undefined && stockMap[size] <= 0);
+
+  const isProductSoldOut = Boolean(product.soldOut) || isAllSizesOutOfStock;
+
   const isSelectedSizeOutOfStock =
     selectedSize !== null &&
     stockMap[selectedSize] !== undefined &&
     stockMap[selectedSize] <= 0;
 
   const isBuyDisabled =
-    Boolean(product.soldOut) ||
+    isProductSoldOut ||
     selectedSize === null ||
     isSelectedSizeOutOfStock;
 
   const handleBuyNow = () => {
-    if (!selectedSize || isSelectedSizeOutOfStock || product.soldOut) {
+    if (!selectedSize || isSelectedSizeOutOfStock || isProductSoldOut) {
       alert("Please select an available size");
       return;
     }
@@ -140,11 +149,11 @@ export default function ProductPage() {
                 {product.colors.map((color) => (
                   <button
                     key={color.name}
-                    disabled={product.soldOut}
+                    disabled={isProductSoldOut}
                     onClick={() => setSelectedColor(color)}
                     className={`relative w-12 h-12 rounded-full border-2 transition-all flex items-center justify-center ${
                       selectedColor?.name === color.name ? 'border-brand-green scale-110' : 'border-gray-200'
-                    } ${product.soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    } ${isProductSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                     style={{ backgroundColor: color.hex }}
                     aria-label={`Select ${color.name}`}
                   >
@@ -164,7 +173,7 @@ export default function ProductPage() {
               </div>
               <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
                 {product.sizes.map((size) => {
-                  const isSizeOutOfStock = Boolean(product.soldOut) || (stockMap[size] !== undefined && stockMap[size] <= 0);
+                  const isSizeOutOfStock = isProductSoldOut || (stockMap[size] !== undefined && stockMap[size] <= 0);
                   const isSelected = selectedSize === size;
 
                   return (
@@ -188,7 +197,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {product.soldOut ? (
+            {isProductSoldOut ? (
               <button 
                 disabled
                 className="w-full bg-gray-200 text-gray-400 py-5 rounded-full font-bold text-lg cursor-not-allowed mb-4"

@@ -5,8 +5,10 @@ import ProductCard from "./ProductCard";
 import { useRef, Suspense } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useAllProductsStock } from "@/lib/useInventory";
 
 function NewArrivalsContent() {
+  const stockMap = useAllProductsStock();
   const searchParams = useSearchParams();
   const genderParam = searchParams.get("gender");
 
@@ -63,11 +65,14 @@ function NewArrivalsContent() {
           className="flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {newArrivals.map((product) => (
-            <div key={product.id} className="min-w-[85vw] sm:min-w-[400px] lg:min-w-[350px] snap-start flex-shrink-0">
-              <ProductCard product={product} />
-            </div>
-          ))}
+          {newArrivals.map((product) => {
+            const isSoldOut = Boolean(product.soldOut) || (stockMap[product.id] !== undefined && stockMap[product.id] <= 0);
+            return (
+              <div key={product.id} className="min-w-[85vw] sm:min-w-[400px] lg:min-w-[350px] snap-start flex-shrink-0">
+                <ProductCard product={product} isSoldOut={isSoldOut} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

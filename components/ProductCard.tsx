@@ -4,9 +4,12 @@ import { Product } from "@/lib/products";
 
 interface ProductCardProps {
   product: Product;
+  isSoldOut?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, isSoldOut }: ProductCardProps) {
+  const effectiveSoldOut = isSoldOut !== undefined ? isSoldOut : Boolean(product.soldOut);
+
   return (
     <Link href={`/product/${product.id}`} className="group block">
       <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4">
@@ -36,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               New
             </span>
           )}
-          {product.soldOut && (
+          {effectiveSoldOut && (
             <span className="bg-black text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
               Sold Out
             </span>
