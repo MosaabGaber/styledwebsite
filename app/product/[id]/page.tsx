@@ -28,10 +28,20 @@ export default function ProductPage() {
     if (!product) return;
     if (typeof window !== "undefined") {
       window.ttq?.track("ViewContent", {
+        content_type: "product",
         content_id: product.id,
         content_name: product.name,
-        value: product.price,
+        value: Number(product.price),
         currency: "EGP",
+        contents: [
+          {
+            content_id: product.id,
+            content_name: product.name,
+            content_type: "product",
+            quantity: 1,
+            price: Number(product.price),
+          },
+        ],
       });
     }
   }, [product]);
@@ -106,6 +116,25 @@ export default function ProductPage() {
     if (!selectedSize || isSelectedSizeOutOfStock || isProductSoldOut) {
       alert("Please select an available size");
       return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.ttq?.track("AddToCart", {
+        content_type: "product",
+        content_id: product.id,
+        content_name: product.name,
+        value: Number(product.price),
+        currency: "EGP",
+        contents: [
+          {
+            content_id: product.id,
+            content_name: product.name,
+            content_type: "product",
+            quantity: 1,
+            price: Number(product.price),
+          },
+        ],
+      });
     }
     
     // In a real app, use React Context/Redux or URL params to pass this state

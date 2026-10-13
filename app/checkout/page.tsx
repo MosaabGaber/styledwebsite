@@ -39,10 +39,20 @@ function CheckoutForm() {
     if (!product) return;
     if (typeof window !== "undefined") {
       window.ttq?.track("InitiateCheckout", {
+        content_type: "product",
         content_id: product.id,
         content_name: product.name,
-        value: product.price,
+        value: Number(product.price),
         currency: "EGP",
+        contents: [
+          {
+            content_id: product.id,
+            content_name: product.name,
+            content_type: "product",
+            quantity: 1,
+            price: Number(product.price),
+          },
+        ],
       });
     }
   }, [product]);
@@ -90,13 +100,21 @@ function CheckoutForm() {
       if (response.ok && data.success) {
         const productId = product.id;
         const productName = product.name;
-        const price = orderTotal;
+        const price = Number(orderTotal);
 
         window.ttq?.track("Purchase", {
           content_type: "product",
           content_id: productId,
           content_name: productName,
-          contents: [{ content_id: productId, content_name: productName, quantity: 1, price }],
+          contents: [
+            {
+              content_id: productId,
+              content_name: productName,
+              content_type: "product",
+              quantity: 1,
+              price: price,
+            },
+          ],
           value: price,
           currency: "EGP",
         });
