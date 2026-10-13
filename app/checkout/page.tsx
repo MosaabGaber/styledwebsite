@@ -87,24 +87,19 @@ function CheckoutForm() {
 
       const data = await response.json();
       if (response.ok && data.success) {
-        if (typeof window !== "undefined") {
-          window.ttq?.track("PlaceAnOrder", {
-            content_id: product.id,
-            content_name: product.name,
-            content_type: "product",
-            value: orderTotal,
-            currency: "EGP",
-            contents: [
-              {
-                content_id: product.id,
-                content_name: product.name,
-                content_type: "product",
-                price: product.price,
-                quantity: 1,
-              },
-            ],
-          });
-        }
+        const productId = product.id;
+        const productName = product.name;
+        const price = orderTotal;
+
+        window.ttq?.track("Purchase", {
+          content_type: "product",
+          content_id: productId,
+          content_name: productName,
+          contents: [{ content_id: productId, content_name: productName, quantity: 1, price }],
+          value: price,
+          currency: "EGP",
+        });
+
         setIsSuccess(true);
       } else {
         alert(data.message || "Failed to place order. Please try again.");
