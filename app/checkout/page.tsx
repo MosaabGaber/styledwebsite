@@ -34,6 +34,18 @@ function CheckoutForm() {
     instapayRef: "",
   });
 
+  useEffect(() => {
+    if (!product) return;
+    if (typeof window !== "undefined") {
+      window.ttq?.track("InitiateCheckout", {
+        content_id: product.id,
+        content_name: product.name,
+        value: product.price,
+        currency: "EGP",
+      });
+    }
+  }, [product]);
+
   if (!product) {
     return (
       <div className="py-24 text-center">
@@ -75,6 +87,24 @@ function CheckoutForm() {
 
       const data = await response.json();
       if (response.ok && data.success) {
+        if (typeof window !== "undefined") {
+          window.ttq?.track("PlaceAnOrder", {
+            content_id: product.id,
+            content_name: product.name,
+            content_type: "product",
+            value: orderTotal,
+            currency: "EGP",
+            contents: [
+              {
+                content_id: product.id,
+                content_name: product.name,
+                content_type: "product",
+                price: product.price,
+                quantity: 1,
+              },
+            ],
+          });
+        }
         setIsSuccess(true);
       } else {
         alert(data.message || "Failed to place order. Please try again.");

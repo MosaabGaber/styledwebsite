@@ -24,6 +24,18 @@ export default function ProductPage() {
   const productId = product?.id;
 
   useEffect(() => {
+    if (!product) return;
+    if (typeof window !== "undefined") {
+      window.ttq?.track("ViewContent", {
+        content_id: product.id,
+        content_name: product.name,
+        value: product.price,
+        currency: "EGP",
+      });
+    }
+  }, [product]);
+
+  useEffect(() => {
     if (!productId) return;
     async function fetchStock() {
       try {
