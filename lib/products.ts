@@ -194,5 +194,23 @@ export const products: Product[] = [
     gender: "women",
     isBestseller: true,
     soldOut: true,
+  },
+  {
+    id: "timberland-premium-6-inch-boots",
+    name: "Timberland Premium 6-Inch Boots",
+    description: "The iconic waterproof boot crafted with premium nubuck leather, seam-sealed construction, durable rubber lug outsole, and a padded collar for all-day comfort.",
+    price: 1700,
+    images: [
+      "/timber1.png",
+      "/timber2.png",
+      "/timber3.png",
+    ],
+    colors: [
+      { name: "Wheat", hex: "#C9A66B" }
+    ],
+    sizes: [41, 42, 43, 44, 45, 46],
+    gender: "men",
+    isBestseller: true,
+    soldOut: false,
   }
 ];
