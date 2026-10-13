@@ -9,6 +9,7 @@ import { ArrowLeft, Check, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
 import ReturnsModal from "@/components/ReturnsModal";
 import { getSupabaseClient, supabase } from "@/lib/supabaseClient";
+import { SHIPPING_FEE } from "@/lib/config";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -216,17 +217,22 @@ export default function ProductPage() {
                 Sold Out
               </button>
             ) : (
-              <button 
-                disabled={isBuyDisabled}
-                onClick={handleBuyNow}
-                className={`w-full py-5 rounded-full font-bold text-lg transition-transform transform mb-4 ${
-                  isBuyDisabled
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
-                    : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
-                }`}
-              >
-                {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
-              </button>
+              <>
+                <button 
+                  disabled={isBuyDisabled}
+                  onClick={handleBuyNow}
+                  className={`w-full py-5 rounded-full font-bold text-lg transition-transform transform mb-2 ${
+                    isBuyDisabled
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                      : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
+                  }`}
+                >
+                  {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
+                </button>
+                <p className="text-center text-sm text-gray-500 mb-4 font-medium">
+                  + {SHIPPING_FEE} EGP shipping
+                </p>
+              </>
             )}
 
             <button
@@ -244,7 +250,7 @@ export default function ProductPage() {
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-brand-green">
                   <Truck className="w-5 h-5" />
                 </div>
-                <span>Free shipping over 150 EGP</span>
+                <span>{SHIPPING_FEE} EGP shipping</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-brand-green">

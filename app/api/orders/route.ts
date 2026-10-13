@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { products } from "@/lib/products";
+import { SHIPPING_FEE } from "@/lib/config";
 
 // Initialize Supabase client with no-cache fetch
 const supabaseUrl = process.env.SUPABASE_URL || "";
@@ -32,12 +33,20 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     // Basic validation
-    if (!name || !email || !phone || !address || !city || !productName || !size || !color || !price || !paymentMethod) {
+    if (!name || !email || !phone || !address || !city || !productName || !size || !color || !paymentMethod) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
       );
     }
+
+    // Calculate total on server using lib/products.ts plus SHIPPING_FEE
+    const matchedProduct = products.find(
+      (p) => (bodyProductId && p.id === bodyProductId) || p.name === productName
+    );
+    const itemPrice = matchedProduct ? matchedProduct.price : (Number(price) || 0);
+    const shippingFee = SHIPPING_FEE;
+    const totalPrice = itemPrice + shippingFee;
 
     let bostaTrackingNumber: string | null = null;
 
@@ -47,17 +56,9 @@ export async function POST(request: NextRequest) {
       if (!bostaApiKey) {
         console.error("Bosta API Key is missing in environment variables.");
       } else {
-        // Map city to Bosta cityId and set a default district
-        let cityId = "FceDyHXwpSYYF9zGW"; // Default to Cairo
-        let districtName = "Maadi";
-
-        if (city === "Giza") {
-          cityId = "0064Qb0OgcA";
-          districtName = "Dokki";
-        } else if (city === "Alexandria") {
-          cityId = "Jrb6X6ucjiYgMP4T7";
-          districtName = "Sidi Gaber";
-        }
+        // Always send Cairo cityId regardless of what customer typed
+        const cityId = "FceDyHXwpSYYF9zGW"; // Cairo
+        const districtName = "Maadi";
 
         const nameParts = name.trim().split(/\s+/);
         const firstName = nameParts[0] || "";
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
 
         const bostaPayload = {
           type: 10, // Delivery
-          cod: Number(price),
+          cod: totalPrice,
           receiver: {
             firstName,
             lastName,
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
           dropOffAddress: {
             cityId,
             districtName,
-            firstLine: address,
+            firstLine: `Customer city: ${city} - ${address}`,
           },
           specs: {
             packageDetails: {
@@ -82,6 +83,7 @@ export async function POST(request: NextRequest) {
               description: `${productName} - Size ${size} - Color ${color}`,
             },
           },
+          notes: `Customer city: ${city}`,
         };
 
         try {
@@ -121,7 +123,7 @@ export async function POST(request: NextRequest) {
           product_name: productName,
           size,
           color,
-          price: Number(price),
+          price: totalPrice,
           payment_method: paymentMethod,
           bosta_tracking_number: bostaTrackingNumber,
         },
@@ -181,6 +183,9 @@ export async function POST(request: NextRequest) {
       try {
         const htmlContent = `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <p style="background-color: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 12px; border-radius: 6px; font-weight: bold; margin-top: 0; margin-bottom: 20px;">
+              Shipment created in Bosta with city set to Cairo. Customer typed: ${city}. Update the city in Bosta if it’s not Cairo.
+            </p>
             <h2 style="color: #059669; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; margin-top: 0;">New Order Confirmed</h2>
             <p style="color: #6b7280; font-size: 14px;"><strong>Order Timestamp:</strong> ${new Date().toLocaleString()}</p>
             
@@ -215,8 +220,16 @@ export async function POST(request: NextRequest) {
                 <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${size}</td>
               </tr>
               <tr>
-                <td style="padding: 6px 0; color: #6b7280;">Price:</td>
-                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${Number(price).toLocaleString()} EGP</td>
+                <td style="padding: 6px 0; color: #6b7280;">Product Price:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${itemPrice.toLocaleString()} EGP</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Shipping:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${shippingFee.toLocaleString()} EGP</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Total Price:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #059669; font-size: 16px;">${totalPrice.toLocaleString()} EGP</td>
               </tr>
             </table>
 
@@ -263,7 +276,7 @@ export async function POST(request: NextRequest) {
         } else if (paymentMethod === "INSTAPAY") {
           paymentNote = `
             <p style="background-color: #fffbeb; border: 1px solid #fef3c7; padding: 12px; border-radius: 6px; color: #b45309;">
-              <strong>Important Payment Step:</strong> Please complete your InstaPay transfer of <strong>${Number(price).toLocaleString()} EGP</strong> to our handle <strong>styled_store@instapay</strong> to confirm and process your order.
+              <strong>Important Payment Step:</strong> Please complete your InstaPay transfer of <strong>${totalPrice.toLocaleString()} EGP</strong> to our handle <strong>styled_store@instapay</strong> to confirm and process your order.
             </p>
           `;
         }
@@ -292,8 +305,16 @@ export async function POST(request: NextRequest) {
                 <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${size}</td>
               </tr>
               <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Product Price:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${itemPrice.toLocaleString()} EGP</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #6b7280;">Shipping:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${shippingFee.toLocaleString()} EGP</td>
+              </tr>
+              <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Total Price:</td>
-                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${Number(price).toLocaleString()} EGP</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827; font-size: 16px;">${totalPrice.toLocaleString()} EGP</td>
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Payment Method:</td>

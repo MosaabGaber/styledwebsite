@@ -8,6 +8,7 @@ import { CheckCircle2, ChevronLeft, CreditCard, RefreshCw, Wallet } from "lucide
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import ReturnsModal from "@/components/ReturnsModal";
+import { SHIPPING_FEE } from "@/lib/config";
 
 function CheckoutForm() {
   const searchParams = useSearchParams();
@@ -64,7 +65,7 @@ function CheckoutForm() {
     setIsSubmitting(true);
     
     try {
-      const orderTotal = product.price >= 150 ? product.price : product.price + 10;
+      const orderTotal = product.price + SHIPPING_FEE;
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
@@ -164,19 +165,16 @@ function CheckoutForm() {
                 </div>
                 <div>
                   <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                  <select
+                  <input
                     required
+                    type="text"
                     id="city"
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all bg-white"
-                  >
-                    <option value="">Select a city</option>
-                    <option value="Cairo">Cairo</option>
-                    <option value="Giza">Giza</option>
-                    <option value="Alexandria">Alexandria</option>
-                  </select>
+                    placeholder="City (e.g. Cairo, Giza, Alexandria, Mansoura)"
+                    className="w-full border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all"
+                  />
                 </div>
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
@@ -257,19 +255,19 @@ function CheckoutForm() {
 
             <div className="space-y-3 text-sm mb-6">
               <div className="flex justify-between text-gray-600">
-                <span>Subtotal</span>
+                <span>Product price</span>
                 <span>{product.price.toLocaleString()} EGP</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
-                <span>{product.price >= 150 ? "Free" : "10 EGP"}</span>
+                <span>{SHIPPING_FEE.toLocaleString()} EGP</span>
               </div>
             </div>
 
             <div className="flex justify-between items-center border-t border-gray-200 pt-6 mb-8">
               <span className="font-bold text-lg text-gray-900">Total</span>
               <span className="font-bold text-2xl text-gray-900">
-                {(product.price >= 150 ? product.price : product.price + 10).toLocaleString()} EGP
+                {(product.price + SHIPPING_FEE).toLocaleString()} EGP
               </span>
             </div>
 
