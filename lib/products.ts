@@ -14,6 +14,44 @@ export interface Product {
 
 export const products: Product[] = [
   {
+    id: "boston-birkenstock-clogs-taupe",
+    name: "Boston Birkenstock Clogs - Taupe",
+    description: "Classic slip-on clogs featuring premium suede, contoured cork-latex footbed, and adjustable strap for the perfect customized fit.",
+    price: 2200,
+    images: [
+      "/birken1.png",
+      "/birken2.png",
+      "/birken3.png",
+      "/birken4.png",
+      "/birken5.png",
+      "/birken6.png",
+    ],
+    colors: [
+      { name: "Taupe", hex: "#C2B4A4" }
+    ],
+    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    gender: "men",
+    isBestseller: true,
+  },
+  {
+    id: "timberland-premium-6-inch-boots",
+    name: "Timberland Premium 6-Inch Boots",
+    description: "The iconic waterproof boot crafted with premium nubuck leather, seam-sealed construction, durable rubber lug outsole, and a padded collar for all-day comfort.",
+    price: 1700,
+    images: [
+      "/timber1.png",
+      "/timber2.png",
+      "/timber3.png",
+    ],
+    colors: [
+      { name: "Wheat", hex: "#C9A66B" }
+    ],
+    sizes: [41, 42, 43, 44, 45, 46],
+    gender: "men",
+    isBestseller: true,
+    soldOut: false,
+  },
+  {
     id: "golden-goose",
     name: "Golden Goose",
     description: "Handcrafted vintage-inspired low-top sneakers featuring the iconic star patch, distressed details, and premium leather lining.",
@@ -84,26 +122,6 @@ export const products: Product[] = [
     gender: "men",
     isBestseller: true,
     soldOut: true,
-  },
-  {
-    id: "boston-birkenstock-clogs-taupe",
-    name: "Boston Birkenstock Clogs - Taupe",
-    description: "Classic slip-on clogs featuring premium suede, contoured cork-latex footbed, and adjustable strap for the perfect customized fit.",
-    price: 2200,
-    images: [
-      "/birken1.png",
-      "/birken2.png",
-      "/birken3.png",
-      "/birken4.png",
-      "/birken5.png",
-      "/birken6.png",
-    ],
-    colors: [
-      { name: "Taupe", hex: "#C2B4A4" }
-    ],
-    sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
-    gender: "men",
-    isBestseller: true,
   },
   {
     id: "campus-00s-core-black",
@@ -194,23 +212,5 @@ export const products: Product[] = [
     gender: "women",
     isBestseller: true,
     soldOut: true,
-  },
-  {
-    id: "timberland-premium-6-inch-boots",
-    name: "Timberland Premium 6-Inch Boots",
-    description: "The iconic waterproof boot crafted with premium nubuck leather, seam-sealed construction, durable rubber lug outsole, and a padded collar for all-day comfort.",
-    price: 1700,
-    images: [
-      "/timber1.png",
-      "/timber2.png",
-      "/timber3.png",
-    ],
-    colors: [
-      { name: "Wheat", hex: "#C9A66B" }
-    ],
-    sizes: [41, 42, 43, 44, 45, 46],
-    gender: "men",
-    isBestseller: true,
-    soldOut: false,
   }
 ];
