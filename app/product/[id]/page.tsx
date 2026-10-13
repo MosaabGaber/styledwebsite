@@ -217,22 +217,17 @@ export default function ProductPage() {
                 Sold Out
               </button>
             ) : (
-              <>
-                <button 
-                  disabled={isBuyDisabled}
-                  onClick={handleBuyNow}
-                  className={`w-full py-5 rounded-full font-bold text-lg transition-transform transform mb-2 ${
-                    isBuyDisabled
-                      ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
-                      : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
-                  }`}
-                >
-                  {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
-                </button>
-                <p className="text-center text-sm text-gray-500 mb-4 font-medium">
-                  + {SHIPPING_FEE} EGP shipping
-                </p>
-              </>
+              <button 
+                disabled={isBuyDisabled}
+                onClick={handleBuyNow}
+                className={`w-full py-5 rounded-full font-bold text-lg transition-transform transform mb-4 ${
+                  isBuyDisabled
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                    : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
+                }`}
+              >
+                {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
+              </button>
             )}
 
             <button
