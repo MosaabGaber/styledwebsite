@@ -2,6 +2,7 @@
 
 import { products } from "@/lib/products";
 import ProductCard from "./ProductCard";
+import HeroSlider, { accessoriesSlides } from "./HeroSlider";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAllProductsStock } from "@/lib/useInventory";
@@ -59,7 +60,7 @@ function BestsellersContent() {
   return (
     <section id="bestsellers" className="pt-8 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
             <h2 className="font-display font-black text-4xl text-gray-900 tracking-tight">
               {selectedTab === "accessories" ? "ACCESSORIES" : "BESTSELLERS"}
@@ -94,7 +95,16 @@ function BestsellersContent() {
             ))}
           </div>
         </div>
+      </div>
 
+      {/* Accessories Hero Slider: edge-to-edge, half-screen (50vh), directly above grid with no gap */}
+      {selectedTab === "accessories" && (
+        <div className="w-full mb-8">
+          <HeroSlider slides={accessoriesSlides} showNavLabels={false} />
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {displayedProducts.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {displayedProducts.map((product) => {
