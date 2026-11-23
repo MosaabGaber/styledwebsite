@@ -6,38 +6,54 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAllProductsStock } from "@/lib/useInventory";
 
+type TabType = "all" | "men" | "women" | "accessories";
+
 function BestsellersContent() {
   const stockMap = useAllProductsStock();
   const searchParams = useSearchParams();
   const router = useRouter();
   const genderParam = searchParams.get("gender");
+  const categoryParam = searchParams.get("category");
+  const tabParam = searchParams.get("tab");
 
-  const [selectedGender, setSelectedGender] = useState<"all" | "men" | "women">("all");
+  const [selectedTab, setSelectedTab] = useState<TabType>("all");
 
   useEffect(() => {
-    if (genderParam === "men" || genderParam === "women" || genderParam === "all") {
-      setSelectedGender(genderParam);
+    const raw = (tabParam || categoryParam || genderParam)?.toLowerCase();
+    if (raw === "accessories") {
+      setSelectedTab("accessories");
+    } else if (raw === "men" || raw === "women" || raw === "all") {
+      setSelectedTab(raw);
     } else {
-      setSelectedGender("all");
+      setSelectedTab("all");
     }
-  }, [genderParam]);
+  }, [genderParam, categoryParam, tabParam]);
 
-  const handleGenderChange = (gender: "all" | "men" | "women") => {
-    setSelectedGender(gender);
+  const handleTabChange = (tab: TabType) => {
+    setSelectedTab(tab);
     const params = new URLSearchParams(searchParams.toString());
-    if (gender === "all") {
+    if (tab === "all") {
       params.delete("gender");
+      params.delete("category");
+      params.delete("tab");
     } else {
-      params.set("gender", gender);
+      params.delete("category");
+      params.delete("tab");
+      params.set("gender", tab);
     }
     const queryString = params.toString();
     router.push(queryString ? `/?${queryString}#bestsellers` : "/#bestsellers", { scroll: false });
   };
 
-  const bestsellers = products.filter((p) => {
+  const displayedProducts = products.filter((p) => {
+    if (selectedTab === "accessories") {
+      return p.category === "accessories";
+    }
+    // Men and Women should show only category: "shoes" products
+    if (p.category !== "shoes") return false;
     if (!p.isBestseller) return false;
-    if (selectedGender === "all") return true;
-    return p.gender === selectedGender;
+    if (selectedTab === "all") return true;
+    return p.gender === selectedTab;
   });
 
   return (
@@ -46,33 +62,45 @@ function BestsellersContent() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
           <div>
             <h2 className="font-display font-black text-4xl text-gray-900 tracking-tight">
-              BESTSELLERS
+              {selectedTab === "accessories" ? "ACCESSORIES" : "BESTSELLERS"}
             </h2>
-            <p className="text-gray-500 mt-2">Our most loved styles.</p>
+            <p className="text-gray-500 mt-2">
+              {selectedTab === "accessories"
+                ? "Elevate your tech with premium straps & bands."
+                : "Our most loved styles."}
+            </p>
           </div>
 
-          {/* Men / Women / All Filter Tabs */}
-          <div className="flex items-center gap-1.5 bg-gray-100 p-1.5 rounded-full border border-gray-200">
-            {(["all", "men", "women"] as const).map((gender) => (
+          {/* Men / Women / Accessories / All Filter Tabs */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-gray-100 p-1.5 rounded-full border border-gray-200">
+            {(["all", "men", "women", "accessories"] as const).map((tab) => (
               <button
-                key={gender}
-                onClick={() => handleGenderChange(gender)}
+                key={tab}
+                onClick={() => handleTabChange(tab)}
                 className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-                  selectedGender === gender
+                  selectedTab === tab
                     ? "bg-gray-900 text-white shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-200/60"
                 }`}
               >
-                {gender === "all" ? "All" : gender === "men" ? "Men" : "Women"}
+                {tab === "all"
+                  ? "All"
+                  : tab === "men"
+                  ? "Men"
+                  : tab === "women"
+                  ? "Women"
+                  : "Accessories"}
               </button>
             ))}
           </div>
         </div>
 
-        {bestsellers.length > 0 ? (
+        {displayedProducts.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            {bestsellers.map((product) => {
-              const isSoldOut = Boolean(product.soldOut) || (stockMap[product.id] !== undefined && stockMap[product.id] <= 0);
+            {displayedProducts.map((product) => {
+              const isSoldOut =
+                Boolean(product.soldOut) ||
+                (stockMap[product.id] !== undefined && stockMap[product.id] <= 0);
               return <ProductCard key={product.id} product={product} isSoldOut={isSoldOut} />;
             })}
           </div>

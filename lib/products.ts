@@ -6,7 +6,8 @@ export interface Product {
   images: string[];
   colors: { name: string; hex: string }[];
   sizes: number[];
-  gender: "men" | "women";
+  category: "shoes" | "accessories";
+  gender?: "men" | "women";
   isNewArrival?: boolean;
   isBestseller?: boolean;
   soldOut?: boolean;
@@ -30,6 +31,7 @@ export const products: Product[] = [
       { name: "Taupe", hex: "#C2B4A4" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
   },
@@ -47,6 +49,7 @@ export const products: Product[] = [
       { name: "Wheat", hex: "#C9A66B" }
     ],
     sizes: [41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
     soldOut: false,
@@ -64,6 +67,7 @@ export const products: Product[] = [
       { name: "Silver/White", hex: "#E5E7EB" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
     soldOut: true,
@@ -82,6 +86,7 @@ export const products: Product[] = [
       { name: "Red", hex: "#EF4444" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "women",
     isNewArrival: true,
     isBestseller: true,
@@ -101,6 +106,7 @@ export const products: Product[] = [
       { name: "Black", hex: "#000000" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "women",
     isNewArrival: true,
     isBestseller: true,
@@ -119,6 +125,7 @@ export const products: Product[] = [
       { name: "White/Silver", hex: "#E5E7EB" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
     soldOut: true,
@@ -137,6 +144,7 @@ export const products: Product[] = [
       { name: "Black", hex: "#000000" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
     soldOut: true,
@@ -155,6 +163,7 @@ export const products: Product[] = [
       { name: "Dark Green", hex: "#1B3B2F" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "men",
     isBestseller: true,
     soldOut: false,
@@ -173,6 +182,7 @@ export const products: Product[] = [
       { name: "Taupe", hex: "#C2B4A4" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "women",
     isBestseller: true,
     soldOut: true,
@@ -191,6 +201,7 @@ export const products: Product[] = [
       { name: "Chestnut", hex: "#954535" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "women",
     isBestseller: true,
     soldOut: true,
@@ -209,8 +220,243 @@ export const products: Product[] = [
       { name: "Portobello Pink", hex: "#D8A7A0" }
     ],
     sizes: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+    category: "shoes",
     gender: "women",
     isBestseller: true,
     soldOut: true,
-  }
+  },
+  {
+    id: "whoop-already-late-black",
+    name: "Whoop Already Late - Black",
+    description: `OUR ALREADY LATE BAND IN BLACK. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/b1.webp",
+      "/b2.webp",
+      "/b3.webp",
+    ],
+    colors: [
+      { name: "Black", hex: "#000000" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-white",
+    name: "Whoop Already Late - White",
+    description: `OUR ALREADY LATE BAND IN WHITE. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/w1.webp",
+      "/w2.webp",
+      "/w3.webp",
+    ],
+    colors: [
+      { name: "White", hex: "#FFFFFF" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-burgundy",
+    name: "Whoop Already Late - Burgundy",
+    description: `OUR ALREADY LATE BAND IN BURGUNDY. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/burg1.webp",
+      "/burg2.webp",
+      "/burg3.webp",
+    ],
+    colors: [
+      { name: "Burgundy", hex: "#6D1A2B" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-pink",
+    name: "Whoop Already Late - Pink",
+    description: `OUR ALREADY LATE BAND IN PINK. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/p1.webp",
+      "/p2.webp",
+      "/p3.webp",
+    ],
+    colors: [
+      { name: "Pink", hex: "#F4A6C0" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-blue",
+    name: "Whoop Already Late - Blue",
+    description: `OUR ALREADY LATE BAND IN BLUE. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/blu1.webp",
+      "/blu2.webp",
+      "/blu3.webp",
+    ],
+    colors: [
+      { name: "Blue", hex: "#2F6FD6" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "google-fitbit-already-late-black",
+    name: "Google Fitbit Already Late - Black",
+    description: `OUR ALREADY LATE BAND IN BLACK. A BOLD MUST-HAVE FOR YOUR FITBIT.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1100,
+    images: [
+      "/fit1.webp",
+      "/fit2.webp",
+      "/fit3.webp",
+    ],
+    colors: [
+      { name: "Black", hex: "#000000" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-metallic",
+    name: "Whoop Metallic",
+    description: `OUR METALLIC BAND IN GOLD, ROSE GOLD AND SILVER. A STATEMENT FINISH FOR YOUR WHOOP.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1500,
+    images: [
+      "/met1.jpg",
+      "/met2.jpg",
+      "/met3.jpg",
+    ],
+    colors: [
+      { name: "Gold", hex: "#D4AF37" },
+      { name: "Rose Gold", hex: "#B76E79" },
+      { name: "Silver", hex: "#C0C0C0" },
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-bear-lux",
+    name: "Whoop Bear Lux",
+    description: `OUR BEAR LUX BAND. A LUXE, STAND-OUT PIECE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/bear1.webp",
+      "/bear2.webp",
+      "/bear3.webp",
+    ],
+    colors: [
+      { name: "White", hex: "#FFFFFF" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
 ];

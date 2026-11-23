@@ -16,7 +16,10 @@ export default function ProductPage() {
   const router = useRouter();
   const product = products.find((p) => p.id === id);
 
+  const isAccessory = product?.category === "accessories" || (product?.sizes && product.sizes.length === 0);
+
   const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [isReturnsModalOpen, setIsReturnsModalOpen] = useState(false);
   const [stockMap, setStockMap] = useState<Record<number, number>>({});
@@ -95,25 +98,39 @@ export default function ProductPage() {
     notFound();
   }
 
-  const isAllSizesOutOfStock =
-    hasFetchedStock &&
-    product.sizes.length > 0 &&
-    product.sizes.every((size) => stockMap[size] !== undefined && stockMap[size] <= 0);
+  // Stock check: accessories track stock under size 0
+  const isAllSizesOutOfStock = isAccessory
+    ? hasFetchedStock && stockMap[0] !== undefined && stockMap[0] <= 0
+    : hasFetchedStock &&
+      product.sizes.length > 0 &&
+      product.sizes.every((size) => stockMap[size] !== undefined && stockMap[size] <= 0);
 
   const isProductSoldOut = Boolean(product.soldOut) || isAllSizesOutOfStock;
 
   const isSelectedSizeOutOfStock =
+    !isAccessory &&
     selectedSize !== null &&
     stockMap[selectedSize] !== undefined &&
     stockMap[selectedSize] <= 0;
 
   const isBuyDisabled =
     isProductSoldOut ||
-    selectedSize === null ||
-    isSelectedSizeOutOfStock;
+    (!isAccessory && (selectedSize === null || isSelectedSizeOutOfStock));
+
+  const handleColorChange = (color: { name: string; hex: string }, index: number) => {
+    setSelectedColor(color);
+    if (product.images.length > index) {
+      setSelectedImageIndex(index);
+    }
+  };
 
   const handleBuyNow = () => {
-    if (!selectedSize || isSelectedSizeOutOfStock || isProductSoldOut) {
+    if (isProductSoldOut) {
+      alert("This product is sold out");
+      return;
+    }
+
+    if (!isAccessory && (!selectedSize || isSelectedSizeOutOfStock)) {
       alert("Please select an available size");
       return;
     }
@@ -137,11 +154,10 @@ export default function ProductPage() {
       });
     }
     
-    // In a real app, use React Context/Redux or URL params to pass this state
     const checkoutParams = new URLSearchParams({
       productId: product.id,
       color: selectedColor?.name || "",
-      size: selectedSize.toString(),
+      size: isAccessory ? "One size" : (selectedSize?.toString() || ""),
     });
     
     router.push(`/checkout?${checkoutParams.toString()}`);
@@ -163,7 +179,17 @@ export default function ProductPage() {
             transition={{ duration: 0.5 }}
             className="lg:w-1/2"
           >
-            <ProductGallery images={product.images} name={product.name} />
+            <ProductGallery
+              images={product.images}
+              name={product.name}
+              activeImageIndex={selectedImageIndex}
+              onActiveIndexChange={(idx) => {
+                setSelectedImageIndex(idx);
+                if (product.colors && product.colors[idx]) {
+                  setSelectedColor(product.colors[idx]);
+                }
+              }}
+            />
           </motion.div>
 
           {/* Product Info */}
@@ -176,7 +202,7 @@ export default function ProductPage() {
             <h1 className="font-display font-black text-4xl text-gray-900 mb-2">{product.name}</h1>
             <p className="text-2xl font-medium text-gray-900 mb-6">{product.price.toLocaleString()} EGP</p>
             
-            <p className="text-gray-600 mb-8 leading-relaxed">
+            <p className="text-gray-600 mb-8 leading-relaxed whitespace-pre-line">
               {product.description}
             </p>
 
@@ -187,11 +213,11 @@ export default function ProductPage() {
                 <span className="text-sm text-gray-500">{selectedColor?.name}</span>
               </div>
               <div className="flex gap-4">
-                {product.colors.map((color) => (
+                {product.colors.map((color, index) => (
                   <button
                     key={color.name}
                     disabled={isProductSoldOut}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => handleColorChange(color, index)}
                     className={`relative w-12 h-12 rounded-full border-2 transition-all flex items-center justify-center ${
                       selectedColor?.name === color.name ? 'border-brand-green scale-110' : 'border-gray-200'
                     } ${isProductSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -206,37 +232,48 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Sizes */}
-            <div className="mb-10">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-gray-900">Size (EU)</h3>
-                <Link href="#" className="text-sm text-brand-green hover:underline">Size Guide</Link>
+            {/* Sizes / One size fits all */}
+            {isAccessory ? (
+              <div className="mb-10">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-bold text-gray-900">Size</h3>
+                </div>
+                <div className="inline-flex items-center px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 font-medium text-sm">
+                  One size fits all
+                </div>
               </div>
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                {product.sizes.map((size) => {
-                  const isSizeOutOfStock = isProductSoldOut || (stockMap[size] !== undefined && stockMap[size] <= 0);
-                  const isSelected = selectedSize === size;
+            ) : (
+              <div className="mb-10">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-bold text-gray-900">Size (EU)</h3>
+                  <Link href="#" className="text-sm text-brand-green hover:underline">Size Guide</Link>
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                  {product.sizes.map((size) => {
+                    const isSizeOutOfStock = isProductSoldOut || (stockMap[size] !== undefined && stockMap[size] <= 0);
+                    const isSelected = selectedSize === size;
 
-                  return (
-                    <button
-                      key={size}
-                      disabled={isSizeOutOfStock}
-                      onClick={() => !isSizeOutOfStock && setSelectedSize(size)}
-                      title={isSizeOutOfStock ? "Out of stock" : `Size ${size}`}
-                      className={`relative py-3 rounded-xl border font-medium transition-all ${
-                        isSizeOutOfStock
-                          ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed line-through opacity-60'
-                          : isSelected 
-                            ? 'bg-brand-green border-brand-green text-white' 
-                            : 'bg-white border-gray-200 text-gray-900 hover:border-gray-400'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={size}
+                        disabled={isSizeOutOfStock}
+                        onClick={() => !isSizeOutOfStock && setSelectedSize(size)}
+                        title={isSizeOutOfStock ? "Out of stock" : `Size ${size}`}
+                        className={`relative py-3 rounded-xl border font-medium transition-all ${
+                          isSizeOutOfStock
+                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed line-through opacity-60'
+                            : isSelected 
+                              ? 'bg-brand-green border-brand-green text-white' 
+                              : 'bg-white border-gray-200 text-gray-900 hover:border-gray-400'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {isProductSoldOut ? (
               <button 
@@ -255,7 +292,11 @@ export default function ProductPage() {
                     : "bg-brand-green hover:bg-brand-green-hover text-white hover:scale-[1.02] shadow-lg"
                 }`}
               >
-                {selectedSize === null ? "Select a Size" : isSelectedSizeOutOfStock ? "Out of Stock" : "Buy Now"}
+                {!isAccessory && selectedSize === null
+                  ? "Select a Size"
+                  : !isAccessory && isSelectedSizeOutOfStock
+                  ? "Out of Stock"
+                  : "Buy Now"}
               </button>
             )}
 

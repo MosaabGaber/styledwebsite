@@ -30,6 +30,7 @@ export default function Footer() {
             <h4 className="font-bold text-gray-900 mb-4">Shop</h4>
             <ul className="space-y-3">
               <li><Link href="/?gender=all#bestsellers" className="text-gray-500 hover:text-brand-green text-sm transition-colors">All Sneakers</Link></li>
+              <li><Link href="/?gender=accessories#bestsellers" className="text-gray-500 hover:text-brand-green text-sm transition-colors">Accessories</Link></li>
               <li><Link href="/#new-arrivals" className="text-gray-500 hover:text-brand-green text-sm transition-colors">New Arrivals</Link></li>
               <li><Link href="/#bestsellers" className="text-gray-500 hover:text-brand-green text-sm transition-colors">Bestsellers</Link></li>
             </ul>

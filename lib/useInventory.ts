@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { getSupabaseClient, supabase } from "./supabaseClient";
 
 /**
- * Custom hook to fetch total stock across all sizes for all products in a single batched query.
- * Returns a map of product_id -> total stock (sum of all sizes).
+ * Custom hook to fetch stock for all products in a single batched query.
+ * Returns a map of product_id -> total stock (sum of sizes, or size 0 for accessories).
  * If Supabase fetch fails, returns an empty map so products fall back to default availability.
  */
 export function useAllProductsStock() {
@@ -17,7 +17,7 @@ export function useAllProductsStock() {
 
         const { data, error } = await client
           .from("inventory")
-          .select("product_id, stock");
+          .select("product_id, size, stock");
 
         if (error) {
           console.error("Error fetching all inventory stock from Supabase:", error.message || error);
@@ -26,7 +26,7 @@ export function useAllProductsStock() {
 
         if (data && data.length > 0) {
           const map: Record<string, number> = {};
-          data.forEach((row: { product_id: string; stock: number }) => {
+          data.forEach((row: { product_id: string; size: number; stock: number }) => {
             const current = map[row.product_id] ?? 0;
             map[row.product_id] = current + Math.max(0, row.stock);
           });

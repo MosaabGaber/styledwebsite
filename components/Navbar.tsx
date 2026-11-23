@@ -22,6 +22,7 @@ export default function Navbar() {
             <Link href="/" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Home</Link>
             <Link href="/?gender=men#bestsellers" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Men</Link>
             <Link href="/?gender=women#bestsellers" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Women</Link>
+            <Link href="/?gender=accessories#bestsellers" className="text-gray-600 hover:text-brand-green font-medium transition-colors">Accessories</Link>
             <Link href="/#new-arrivals" className="text-gray-600 hover:text-brand-green font-medium transition-colors">New Arrivals</Link>
           </div>
 
@@ -55,6 +56,7 @@ export default function Navbar() {
               <Link href="/" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Home</Link>
               <Link href="/?gender=men#bestsellers" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Men</Link>
               <Link href="/?gender=women#bestsellers" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Women</Link>
+              <Link href="/?gender=accessories#bestsellers" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>Accessories</Link>
               <Link href="/#new-arrivals" className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md" onClick={() => setIsOpen(false)}>New Arrivals</Link>
               <Link href="/checkout" className="block px-3 py-2 text-base font-medium text-brand-green flex items-center space-x-2">
                 <ShoppingBag className="w-5 h-5" />

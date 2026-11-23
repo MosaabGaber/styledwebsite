@@ -6,13 +6,32 @@ import Image from "next/image";
 interface ProductGalleryProps {
   images: string[];
   name: string;
+  activeImageIndex?: number;
+  onActiveIndexChange?: (index: number) => void;
 }
 
-export default function ProductGallery({ images, name }: ProductGalleryProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
+export default function ProductGallery({
+  images,
+  name,
+  activeImageIndex,
+  onActiveIndexChange,
+}: ProductGalleryProps) {
+  const [activeIndex, setActiveIndex] = useState(activeImageIndex ?? 0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync when activeImageIndex prop changes from parent
+  useEffect(() => {
+    if (
+      typeof activeImageIndex === "number" &&
+      activeImageIndex >= 0 &&
+      activeImageIndex < images.length &&
+      activeImageIndex !== activeIndex
+    ) {
+      setActiveIndex(activeImageIndex);
+    }
+  }, [activeImageIndex, images.length, activeIndex]);
 
   // Sync scroll position of mobile carousel when activeIndex changes
   // (but only if it wasn't triggered by a scroll event to avoid feedback fighting)
@@ -46,6 +65,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
       const index = Math.round(scrollLeft / width);
       if (index >= 0 && index < images.length && index !== activeIndex) {
         setActiveIndex(index);
+        onActiveIndexChange?.(index);
       }
     }
     
@@ -117,6 +137,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
                 onClick={() => {
                   isScrollingRef.current = false; // Allow smooth scroll animation trigger
                   setActiveIndex(idx);
+                  onActiveIndexChange?.(idx);
                 }}
                 className={`relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-xl overflow-hidden border bg-neutral-50 transition-all ${
                   activeIndex === idx 

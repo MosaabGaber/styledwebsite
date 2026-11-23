@@ -50,7 +50,9 @@ export default function ProductCard({ product, isSoldOut }: ProductCardProps) {
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-bold text-gray-900 text-lg mb-1">{product.name}</h3>
-          <p className="text-gray-500 text-sm">{product.colors.length} Colors</p>
+          <p className="text-gray-500 text-sm">
+            {product.colors.length === 1 ? "1 Color" : `${product.colors.length} Colors`}
+          </p>
         </div>
         <p className="font-medium text-gray-900">{product.price.toLocaleString()} EGP</p>
       </div>

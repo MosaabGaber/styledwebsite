@@ -32,8 +32,15 @@ export async function POST(request: NextRequest) {
       paymentMethod,
     } = await request.json();
 
+    // Match product to check category and price
+    const matchedProduct = products.find(
+      (p) => (bodyProductId && p.id === bodyProductId) || p.name === productName
+    );
+    const isAccessory = matchedProduct?.category === "accessories" || size === "One size";
+    const orderSize = size || (isAccessory ? "One size" : "");
+
     // Basic validation
-    if (!name || !email || !phone || !address || !city || !productName || !size || !color || !paymentMethod) {
+    if (!name || !email || !phone || !address || !city || !productName || !orderSize || !color || !paymentMethod) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
@@ -41,9 +48,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate total on server using lib/products.ts plus SHIPPING_FEE
-    const matchedProduct = products.find(
-      (p) => (bodyProductId && p.id === bodyProductId) || p.name === productName
-    );
     const itemPrice = matchedProduct ? matchedProduct.price : (Number(price) || 0);
     const shippingFee = SHIPPING_FEE;
     const totalPrice = itemPrice + shippingFee;
@@ -80,7 +84,7 @@ export async function POST(request: NextRequest) {
           specs: {
             packageDetails: {
               itemsCount: 1,
-              description: `${productName} - Size ${size} - Color ${color}`,
+              description: `${productName} - Size ${orderSize} - Color ${color}`,
             },
           },
           notes: `Customer city: ${city}`,
@@ -121,7 +125,7 @@ export async function POST(request: NextRequest) {
           address,
           city,
           product_name: productName,
-          size,
+          size: orderSize,
           color,
           price: totalPrice,
           payment_method: paymentMethod,
@@ -136,9 +140,10 @@ export async function POST(request: NextRequest) {
         console.log("Successfully inserted order into Supabase.");
 
         // Automatically decrement stock by 1 for product/size combination after order is saved
-        const targetProductId = bodyProductId || products.find((p) => p.name === productName)?.id;
-        if (targetProductId && size) {
-          const numSize = Number(size);
+        // For accessories, track stock under size 0
+        const targetProductId = bodyProductId || matchedProduct?.id;
+        if (targetProductId && orderSize) {
+          const numSize = isAccessory ? 0 : Number(orderSize);
           try {
             // Attempt atomic RPC call first
             const { error: rpcError } = await supabase.rpc("decrement_stock", {
@@ -217,7 +222,7 @@ export async function POST(request: NextRequest) {
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Color / Size:</td>
-                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${size}</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${orderSize}</td>
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Product Price:</td>
@@ -302,7 +307,7 @@ export async function POST(request: NextRequest) {
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Color / Size:</td>
-                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${size}</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #111827;">${color} / ${orderSize}</td>
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #6b7280;">Product Price:</td>
