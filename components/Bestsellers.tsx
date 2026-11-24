@@ -58,8 +58,14 @@ function BestsellersContent() {
   });
 
   return (
-    <section id="bestsellers" className="pt-8 pb-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="bestsellers"
+      className={`${
+        selectedTab === "accessories" ? "pt-0 md:pt-8" : "pt-6 md:pt-8"
+      } pb-24 bg-white`}
+    >
+      {/* Category heading, subtitle, and tabs: hidden on mobile below md, visible on desktop */}
+      <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
             <h2 className="font-display font-black text-4xl text-gray-900 tracking-tight">
@@ -99,7 +105,7 @@ function BestsellersContent() {
 
       {/* Accessories Hero Slider: edge-to-edge, half-screen (50vh), directly above grid with no gap */}
       {selectedTab === "accessories" && (
-        <div className="w-full mb-8">
+        <div className="w-full mb-6 md:mb-8">
           <HeroSlider slides={accessoriesSlides} showNavLabels={false} />
         </div>
       )}
@@ -128,8 +134,8 @@ export default function Bestsellers() {
   return (
     <Suspense
       fallback={
-        <section id="bestsellers" className="pt-8 pb-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="bestsellers" className="pt-0 md:pt-8 pb-24 bg-white">
+          <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="h-12 bg-gray-100 animate-pulse rounded-lg mb-8" />
           </div>
         </section>
