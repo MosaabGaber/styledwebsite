@@ -284,93 +284,6 @@ Contents: Band and clasp only (tracker not included)`,
     isBestseller: false,
   },
   {
-    id: "whoop-already-late-burgundy",
-    name: "Whoop Already Late - Burgundy",
-    description: `OUR ALREADY LATE BAND IN BURGUNDY. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
-
-• Unique design - A bold, refined look that stands out from the crowd
-• Secure clasp - Sturdy and durable for everyday use
-• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
-• Adjustable - Easily fits any wrist
-• Meticulous craftsmanship - Premium finishes for a high-end look
-
-Size: One size fits all, fully adjustable
-
-Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
-
-Contents: Band and clasp only (tracker not included)`,
-    price: 1200,
-    images: [
-      "/burg1.webp",
-      "/burg2.webp",
-      "/burg3.webp",
-    ],
-    colors: [
-      { name: "Burgundy", hex: "#6D1A2B" }
-    ],
-    sizes: [],
-    category: "accessories",
-    isBestseller: false,
-  },
-  {
-    id: "whoop-already-late-pink",
-    name: "Whoop Already Late - Pink",
-    description: `OUR ALREADY LATE BAND IN PINK. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
-
-• Unique design - A bold, refined look that stands out from the crowd
-• Secure clasp - Sturdy and durable for everyday use
-• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
-• Adjustable - Easily fits any wrist
-• Meticulous craftsmanship - Premium finishes for a high-end look
-
-Size: One size fits all, fully adjustable
-
-Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
-
-Contents: Band and clasp only (tracker not included)`,
-    price: 1200,
-    images: [
-      "/p1.webp",
-      "/p2.webp",
-      "/p3.webp",
-    ],
-    colors: [
-      { name: "Pink", hex: "#F4A6C0" }
-    ],
-    sizes: [],
-    category: "accessories",
-    isBestseller: false,
-  },
-  {
-    id: "whoop-already-late-blue",
-    name: "Whoop Already Late - Blue",
-    description: `OUR ALREADY LATE BAND IN BLUE. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
-
-• Unique design - A bold, refined look that stands out from the crowd
-• Secure clasp - Sturdy and durable for everyday use
-• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
-• Adjustable - Easily fits any wrist
-• Meticulous craftsmanship - Premium finishes for a high-end look
-
-Size: One size fits all, fully adjustable
-
-Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
-
-Contents: Band and clasp only (tracker not included)`,
-    price: 1200,
-    images: [
-      "/blu1.webp",
-      "/blu2.webp",
-      "/blu3.webp",
-    ],
-    colors: [
-      { name: "Blue", hex: "#2F6FD6" }
-    ],
-    sizes: [],
-    category: "accessories",
-    isBestseller: false,
-  },
-  {
     id: "google-fitbit-already-late-black",
     name: "Google Fitbit Already Late - Black",
     description: `OUR ALREADY LATE BAND IN BLACK. A BOLD MUST-HAVE FOR YOUR FITBIT.
@@ -431,6 +344,63 @@ Contents: Band and clasp only (tracker not included)`,
     isBestseller: false,
   },
   {
+    id: "whoop-bear-lux-navy",
+    name: "Whoop Bear Lux - Navy",
+    description: `OUR BEAR LUX BAND IN NAVY. A LUXE, STAND-OUT PIECE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/bear3.webp",
+    ],
+    colors: [
+      { name: "Navy", hex: "#1F2A44" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+    soldOut: false,
+  },
+  {
+    id: "whoop-already-late-burgundy",
+    name: "Whoop Already Late - Burgundy",
+    description: `OUR ALREADY LATE BAND IN BURGUNDY. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/burg1.webp",
+      "/burg2.webp",
+      "/burg3.webp",
+    ],
+    colors: [
+      { name: "Burgundy", hex: "#6D1A2B" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
     id: "whoop-bear-lux",
     name: "Whoop Bear Lux",
     description: `OUR BEAR LUX BAND. A LUXE, STAND-OUT PIECE FOR YOUR WHOOP COLLECTION.
@@ -454,6 +424,64 @@ Contents: Band and clasp only (tracker not included)`,
     ],
     colors: [
       { name: "White", hex: "#FFFFFF" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-pink",
+    name: "Whoop Already Late - Pink",
+    description: `OUR ALREADY LATE BAND IN PINK. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/p1.webp",
+      "/p2.webp",
+      "/p3.webp",
+    ],
+    colors: [
+      { name: "Pink", hex: "#F4A6C0" }
+    ],
+    sizes: [],
+    category: "accessories",
+    isBestseller: false,
+  },
+  {
+    id: "whoop-already-late-blue",
+    name: "Whoop Already Late - Blue",
+    description: `OUR ALREADY LATE BAND IN BLUE. A BOLD MUST-HAVE FOR YOUR WHOOP COLLECTION.
+
+• Unique design - A bold, refined look that stands out from the crowd
+• Secure clasp - Sturdy and durable for everyday use
+• Comfortable all day long - Lightweight and flexible, designed to be worn without a second thought
+• Adjustable - Easily fits any wrist
+• Meticulous craftsmanship - Premium finishes for a high-end look
+
+Size: One size fits all, fully adjustable
+
+Care: Avoid prolonged contact with water to preserve the vibrancy of the colors and pattern
+
+Contents: Band and clasp only (tracker not included)`,
+    price: 1200,
+    images: [
+      "/blu1.webp",
+      "/blu2.webp",
+      "/blu3.webp",
+    ],
+    colors: [
+      { name: "Blue", hex: "#2F6FD6" }
     ],
     sizes: [],
     category: "accessories",
